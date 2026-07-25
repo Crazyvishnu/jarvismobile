@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Jarvis</string>
+    <string name="accessibility_service_description">Lets Jarvis read the screen and tap/type on your behalf to send messages and fill forms.</string>
+</resources>

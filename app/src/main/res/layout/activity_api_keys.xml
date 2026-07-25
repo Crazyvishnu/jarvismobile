@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI Services &amp; API Keys"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="YouTube API Key" />
+        <EditText android:id="@+id/youtubeKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="AI-xxxx" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Spotify Client ID" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/spotifyId" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Spotify Client Secret" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/spotifySecret" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gemini API Key" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/geminiKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="AIza..." />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI API Key" android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/openaiKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="sk-..."
+            android:inputType="textPassword" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Groq API Key" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/groqKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="gsk_..." android:inputType="textPassword" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenWeatherMap API Key" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/weatherKey" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Google Maps API Key" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/mapsKey" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ElevenLabs API Key" android:layout_marginTop="8dp"/>
+        <EditText android:id="@+id/elevenKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/saveApiButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Keys"
+            android:layout_marginTop="24dp"/>
+
+    </LinearLayout>
+</ScrollView>

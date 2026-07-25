@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your profile (used to fill forms)"
+            android:textStyle="bold" />
+
+        <EditText android:id="@+id/nameInput" android:hint="Full name"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <EditText android:id="@+id/emailInput" android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <EditText android:id="@+id/phoneInput" android:hint="Phone number"
+            android:inputType="phone"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <EditText android:id="@+id/addressInput" android:hint="Address"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+         <EditText
+    android:id="@+id/youtubeApiKeyInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="YouTube API Key"/>
+
+<EditText
+    android:id="@+id/spotifyClientIdInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Spotify Client ID"/>
+
+<EditText
+    android:id="@+id/spotifyClientSecretInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Spotify Client Secret"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Mail (IMAP app password, not your normal password)"
+            android:textStyle="bold" />
+
+        <EditText android:id="@+id/mailPasswordInput" android:hint="App password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Add a WhatsApp contact"
+            android:textStyle="bold" />
+
+        <EditText android:id="@+id/contactNameInput" android:hint="Name (e.g. basith)"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <EditText android:id="@+id/contactPhoneInput" android:hint="Phone with country code (e.g. 91987xxxxxxx)"
+            android:inputType="phone"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <Button android:id="@+id/saveContactButton" android:text="Save contact"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+<Button
+    android:id="@+id/apiKeysButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="AI Services &amp; API Keys"/>
+        <Button android:id="@+id/saveProfileButton" android:text="Save profile"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>
