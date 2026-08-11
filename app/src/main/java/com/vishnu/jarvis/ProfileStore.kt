@@ -86,4 +86,11 @@ object ProfileStore {
     fun setElevenLabsKey(context: Context, key: String) {
         prefs(context).edit().putString("eleven_labs_key", key).apply()
     }
+
+    // Device PIN for auto-unlock (stored locally, used by accessibility service
+    // to auto-enter the PIN when executing commands from lock screen)
+    fun getDevicePin(context: Context): String? = prefs(context).getString("device_pin", null)
+    fun setDevicePin(context: Context, pin: String) {
+        prefs(context).edit().putString("device_pin", pin).apply()
+    }
 }

@@ -74,7 +74,20 @@ class MainActivity : AppCompatActivity() {
 
         LockScreenWaker.ensureFullScreenIntentPermission(this)
 
-        // Initialize Text To Speech
+        // Payment Guard health check: WRITE_SECURE_SETTINGS is required for Jarvis
+        // to disable its own accessibility service when banking apps open.
+        // Without it, apps like BHIM/YONO SBI will still detect Jarvis.
+        if (!PaymentAppGuard.hasWriteSecureSettings(this)) {
+            android.util.Log.w("MainActivity", "[PaymentGuard] WRITE_SECURE_SETTINGS not granted! Payment apps will detect Jarvis.")
+            Toast.makeText(
+                this,
+                "⚠ Run this ADB command to fix banking app detection:\nadb shell pm grant com.vishnu.jarvis android.permission.WRITE_SECURE_SETTINGS",
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            android.util.Log.d("MainActivity", "[PaymentGuard] ✓ WRITE_SECURE_SETTINGS granted — payment guard active")
+        }
+
         TextToSpeechManager.init(this)
 
         val list = findViewById<RecyclerView>(R.id.messageList)
@@ -82,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = adapter
 
-        router = CommandRouter(this) { reply ->
+        router = CommandRouter(this) { reply, _ ->
             runOnUiThread {
                 adapter.addMessage("Jarvis: $reply")
                 TextToSpeechManager.speak(reply)
@@ -120,6 +133,10 @@ class MainActivity : AppCompatActivity() {
         if (intent?.getBooleanExtra("from_wake_word", false) == true) {
             handleWakeWordTrigger()
         }
+
+        intent?.getStringExtra("execute_unlocked_command")?.let { cmd ->
+            handleUserInput(cmd)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -128,15 +145,20 @@ class MainActivity : AppCompatActivity() {
         if (intent.getBooleanExtra("from_wake_word", false)) {
             handleWakeWordTrigger()
         }
+        intent.getStringExtra("execute_unlocked_command")?.let { cmd ->
+            handleUserInput(cmd)
+        }
     }
 
     private fun handleWakeWordTrigger() {
+        // OpenWakeWordService is the single owner of the post-wake conversation:
+        // it already speaks "Yes Vishnu?" and captures the command with its own
+        // SpeechRecognizer. MainActivity is only brought to the foreground here so
+        // the UI is visible and the keyguard is dismissed (needed so "open app"
+        // style commands can launch). It must NOT speak or start a second
+        // recognizer — two recognizers competing for the mic was causing Jarvis
+        // to go silent after the spoken command (ERROR_RECOGNIZER_BUSY).
         dismissKeyguard()
-        // Wait a bit for the screen to settle before speaking/listening
-        handler.postDelayed({
-            TextToSpeechManager.speak("Yes Vishnu?")
-            handler.postDelayed({ startVoiceCommand() }, 1200)
-        }, 500)
     }
 
     private fun dismissKeyguard() {
@@ -195,9 +217,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        val permissions = mutableListOf(Manifest.permission.RECORD_AUDIO)
+        val permissions = mutableListOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.CALL_PHONE
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
         }
         
         val toRequest = permissions.filter {

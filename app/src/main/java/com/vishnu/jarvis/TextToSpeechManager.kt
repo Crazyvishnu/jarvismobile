@@ -33,12 +33,41 @@ object TextToSpeechManager : TextToSpeech.OnInitListener {
     }
 
     fun speak(text: String) {
+        speakInternal(text, null)
+    }
+
+    fun speakWithCallback(text: String, onDone: () -> Unit) {
+        speakInternal(text, onDone)
+    }
+
+    fun speakAndListen(context: Context, text: String) {
+        speakInternal(text) {
+            context.sendBroadcast(android.content.Intent("JARVIS_NEEDS_RESPONSE"))
+        }
+    }
+
+    private fun speakInternal(text: String, onDone: (() -> Unit)?) {
         if (ready) {
-            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "jarvis")
+            val utteranceId = if (onDone != null) "jarvis_q_${System.currentTimeMillis()}" else "jarvis"
+            
+            if (onDone != null) {
+                tts?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                    override fun onStart(id: String?) {}
+                    override fun onDone(id: String?) {
+                        if (id == utteranceId) onDone()
+                    }
+                    @Deprecated("Deprecated in Java")
+                    override fun onError(id: String?) {}
+                })
+            }
+            
+            val params = android.os.Bundle().apply {
+                putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceId)
+            }
+            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, utteranceId)
         } else {
-            // Engine not ready yet (e.g. right after app launch) - queue it
-            // instead of dropping it so the very first reply is still heard.
             pending.add(text)
+            // Callbacks for pending not supported yet
         }
     }
 

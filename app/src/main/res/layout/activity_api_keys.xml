@@ -12,10 +12,40 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AI Services &amp; API Keys"
+            android:text="AI Services and API Keys"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Protected by biometric / device PIN"
+            android:textSize="12sp"
+            android:textColor="#888888"
             android:layout_marginBottom="16dp"/>
+
+        <!-- Device PIN section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Device PIN (for auto-unlock from lock screen)"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+        <EditText
+            android:id="@+id/devicePinInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your lock screen PIN"
+            android:inputType="numberPassword" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#333333"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="YouTube API Key" />
         <EditText android:id="@+id/youtubeKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="AI-xxxx" />
@@ -30,7 +60,6 @@
         <EditText android:id="@+id/geminiKey" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="AIza..." />
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenAI API Key" android:layout_marginTop="8dp"/>
-
         <EditText
             android:id="@+id/openaiKey"
             android:layout_width="match_parent"

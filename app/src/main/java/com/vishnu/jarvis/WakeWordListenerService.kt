@@ -42,9 +42,13 @@ class WakeWordListenerService : Service() {
 
         TextToSpeechManager.init(this)
 
-        router = CommandRouter(this) { reply ->
+        router = CommandRouter(this) { reply, needsResponse ->
             Handler(Looper.getMainLooper()).post {
-                TextToSpeechManager.speak(reply)
+                if (needsResponse) {
+                    TextToSpeechManager.speakAndListen(this, reply)
+                } else {
+                    TextToSpeechManager.speak(reply)
+                }
                 Toast.makeText(this, reply, Toast.LENGTH_SHORT).show()
             }
         }

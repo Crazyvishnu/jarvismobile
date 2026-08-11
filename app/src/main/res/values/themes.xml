@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Jarvis" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowBackground">@color/black</item>
-        <item name="colorPrimary">@color/green</item>
-        <item name="colorSecondary">@color/green</item>
-        <item name="android:textColor">@color/green</item>
+        <item name="android:windowBackground">@color/claude_bg</item>
+        <item name="colorPrimary">@color/claude_coral</item>
+        <item name="colorSecondary">@color/claude_coral_light</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/claude_bg</item>
+        <item name="android:navigationBarColor">@color/claude_bg</item>
+    </style>
+
+    <style name="Theme.Jarvis.Transparent" parent="Theme.Jarvis">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>

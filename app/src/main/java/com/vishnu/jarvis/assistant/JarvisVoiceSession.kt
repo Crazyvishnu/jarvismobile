@@ -19,9 +19,13 @@ class JarvisVoiceSession(
 
         TextToSpeechManager.init(service)
 
-        commandRouter = CommandRouter(service) { reply ->
+        commandRouter = CommandRouter(service) { reply, needsResponse ->
 
-            TextToSpeechManager.speak(reply)
+            if (needsResponse) {
+                TextToSpeechManager.speakAndListen(service, reply)
+            } else {
+                TextToSpeechManager.speak(reply)
+            }
 
             Toast.makeText(
                 service,

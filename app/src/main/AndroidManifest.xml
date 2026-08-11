@@ -14,6 +14,68 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Package visibility (Android 11 / API 30+).
+         Without this, getLaunchIntentForPackage(...) returns null and
+         getInstalledApplications(...) comes back empty, so Jarvis cannot
+         see or launch other apps ("open chrome" silently does nothing).
+         QUERY_ALL_PACKAGES is required because AppController does a dynamic
+         scan of ALL installed apps to open any app by spoken name. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <!-- Even with QUERY_ALL_PACKAGES, declaring the intents/packages Jarvis
+         launches keeps intent resolution (ACTION_VIEW, dialer, maps, etc.)
+         working and documents what the app talks to. -->
+    <queries>
+        <!-- Web links, YouTube/Google searches (http/https ACTION_VIEW) -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <!-- Maps -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+        <!-- Phone calls -->
+        <intent>
+            <action android:name="android.intent.action.CALL" />
+            <data android:scheme="tel" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+        </intent>
+        <!-- Camera capture -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <!-- Speech recognition -->
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+        <!-- Text-to-speech engines -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+        <!-- Specific apps Jarvis launches by package name -->
+        <package android:name="com.android.chrome" />
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.instagram.android" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="com.spotify.music" />
+        <package android:name="com.google.android.gm" />
+        <package android:name="com.google.android.calculator" />
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -40,6 +102,8 @@
         <activity
             android:name=".ProfileSettingsActivity"
             android:exported="false" />
+
+
 
         <!-- Voice Interaction Services -->
         <service
@@ -100,6 +164,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- Detect newly installed/updated apps at install time so the
+                     payment guard is ready before the app's first launch.
+                     data scheme is required for PACKAGE_ADDED/REPLACED by Android. -->
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 

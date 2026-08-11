@@ -56,15 +56,46 @@ class AppController(private val context: Context) {
 
             if (intent != null) {
 
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                context.startActivity(intent)
-
+                launchAppSafe(packageName, intent)
                 return true
+            }
+        } else {
+            // Dynamically search all installed apps if not in the hardcoded list
+            try {
+                val pm = context.packageManager
+                val packages = pm.getInstalledApplications(android.content.pm.PackageManager.GET_META_DATA)
+                val targetName = name.lowercase().replace(" ", "")
+                
+                // Sort or prioritize apps? We'll just take the first match that is launchable.
+                for (appInfo in packages) {
+                    val appLabel = pm.getApplicationLabel(appInfo).toString().lowercase().replace(" ", "")
+                    if (appLabel == targetName || appLabel.contains(targetName)) {
+                        val intent = pm.getLaunchIntentForPackage(appInfo.packageName)
+                        if (intent != null) {
+                            launchAppSafe(appInfo.packageName, intent)
+                            return true
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
         return false
+    }
+
+    /**
+     * Launches an app safely. If it is a known or suspected banking/payment app,
+     * immediately disables JarvisAccessibilityService right BEFORE launching the app
+     * so that its security check finds no accessibility service enabled.
+     */
+    private fun launchAppSafe(pkgName: String, intent: Intent) {
+        if (PaymentAppGuard.isPaymentApp(pkgName)) {
+            PaymentAppGuard.disableAccessibilityService(context)
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     fun googleSearch(query: String) {

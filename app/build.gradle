@@ -72,6 +72,12 @@ dependencies {
     implementation 'com.sun.mail:android-mail:1.6.7'
     implementation 'com.sun.mail:android-activation:1.6.7'
 
-    implementation 'org.tensorflow:tensorflow-lite:2.16.1'
-    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1'
+    // On-device wake word ("hey jarvis") ONNX pipeline — used by OpenWakeWordDetector
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.18.0'
+
+    // Vosk keyword spotting — used by VoskWakeWordService (grammar-restricted recognizer)
+    implementation 'com.alphacephei:vosk-android:0.3.47'
+
+    // Biometric authentication — fingerprint / device PIN gate for API Keys screen
+    implementation 'androidx.biometric:biometric:1.1.0'
 }

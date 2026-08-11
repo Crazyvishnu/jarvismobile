@@ -12,6 +12,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Wake Word (say this to activate Jarvis)"
+            android:textStyle="bold" />
+
+        <EditText android:id="@+id/wakeWordInput" android:hint="e.g. hey jarvis, siri, hey buddy"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Your profile (used to fill forms)"
             android:textStyle="bold" />
 
@@ -25,23 +37,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content" />
         <EditText android:id="@+id/addressInput" android:hint="Address"
             android:layout_width="match_parent" android:layout_height="wrap_content" />
-         <EditText
-    android:id="@+id/youtubeApiKeyInput"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="YouTube API Key"/>
 
-<EditText
-    android:id="@+id/spotifyClientIdInput"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Spotify Client ID"/>
-
-<EditText
-    android:id="@+id/spotifyClientSecretInput"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Spotify Client Secret"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,11 +64,16 @@
 
         <Button android:id="@+id/saveContactButton" android:text="Save contact"
             android:layout_width="wrap_content" android:layout_height="wrap_content" />
-<Button
-    android:id="@+id/apiKeysButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="AI Services &amp; API Keys"/>
+
+        <Button
+            android:id="@+id/apiKeysButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#E8630A"
+            android:textColor="#FFFFFF"
+            android:text="AI Services and API Keys" />
+
         <Button android:id="@+id/saveProfileButton" android:text="Save profile"
             android:layout_marginTop="16dp"
             android:layout_width="wrap_content" android:layout_height="wrap_content" />

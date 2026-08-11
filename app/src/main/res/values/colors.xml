@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
+    <!-- Legacy mapping to premium tones to prevent broken references -->
+    <color name="black">#121214</color>
+    <color name="green">#D97757</color>
+    <color name="dark">#1A1A1D</color>
+    <color name="lightGreen">#E08262</color>
+    <color name="red">#FF5252</color>
+    <color name="yellow">#F2C94C</color>
+    <color name="blue">#0B84F3</color>
+    <color name="white">#FAF9F5</color>
 
-    <color name="black">#050505</color>
+    <!-- Apple & Claude (Anthropic) Design System Tokens -->
+    <color name="claude_bg">#121214</color>
+    <color name="claude_surface">#1C1C1F</color>
+    <color name="claude_surface_card">#242428</color>
+    <color name="claude_border">#343439</color>
+    <color name="claude_coral">#D97757</color>
+    <color name="claude_coral_light">#E58A65</color>
+    <color name="claude_amber">#EBA857</color>
 
-    <color name="green">#00FF66</color>
-
-    <color name="dark">#111111</color>
-
-    <color name="lightGreen">#88FF88</color>
-
-    <color name="red">#FF4444</color>
-
-    <color name="yellow">#FFD600</color>
-
-    <color name="blue">#00CFFF</color>
-
-    <color name="white">#FFFFFF</color>
-
+    <!-- Modern Typography Tokens -->
+    <color name="text_primary">#FAF9F5</color>
+    <color name="text_secondary">#A3A29E</color>
+    <color name="text_tertiary">#6E6D69</color>
+    <color name="text_coral">#D97757</color>
 </resources>

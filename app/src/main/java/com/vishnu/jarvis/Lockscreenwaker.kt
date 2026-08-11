@@ -48,7 +48,7 @@ object LockScreenWaker {
         ensureChannel(context)
 
         val contentIntent = Intent(context, MainActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             putExtra("from_wake_word", true)
         }
 
@@ -57,6 +57,7 @@ object LockScreenWaker {
         if (powerManager.isInteractive) {
             try {
                 context.startActivity(contentIntent)
+                return // Successfully launched directly — skip the notification banner!
             } catch (e: Exception) {
                 // Fallback to notification if direct start fails
             }
@@ -82,6 +83,81 @@ object LockScreenWaker {
 
         val manager = context.getSystemService(NotificationManager::class.java)
         manager.notify(NOTIFICATION_ID, notification)
+    }
+
+    fun wakeAndExecute(context: Context, pendingCommand: String) {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        // Step 1: Wake the screen
+        if (!powerManager.isInteractive) {
+            @Suppress("DEPRECATION")
+            val wakeLock = powerManager.newWakeLock(
+                PowerManager.SCREEN_BRIGHT_WAKE_LOCK or
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                    PowerManager.ON_AFTER_RELEASE,
+                "Jarvis:WakeWordScreenOn"
+            )
+            wakeLock.acquire(10_000L)
+            wakeLock.release()
+        }
+
+        // Step 2: If already unlocked, just launch directly
+        val km = context.getSystemService(Context.KEYGUARD_SERVICE) as android.app.KeyguardManager
+        if (!km.isKeyguardLocked) {
+            android.util.Log.d("LockScreenWaker", "Already unlocked, launching directly")
+            val intent = Intent(context, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                putExtra("execute_unlocked_command", pendingCommand)
+            }
+            context.startActivity(intent)
+            return
+        }
+
+        // Step 3: Phone IS locked.
+        android.util.Log.d("LockScreenWaker", "Phone is locked. A11y instance: ${JarvisAccessibilityService.instance != null}")
+
+        // Launch MainActivity directly — it has showWhenLocked=true and calls
+        // requestDismissKeyguard() which triggers Android's native bouncer.
+        // This is the flow that originally worked for auto-unlock.
+        android.util.Log.d("LockScreenWaker", "Launching MainActivity with pending_command_after_unlock: $pendingCommand")
+        
+        if (JarvisAccessibilityService.instance != null) {
+            JarvisAccessibilityService.shouldRelockAfterCommand = true
+            JarvisAccessibilityService.startAutoUnlock(pendingCommand)
+        }
+
+        ensureChannel(context)
+
+        val contentIntent = Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra("pending_command_after_unlock", pendingCommand)
+            putExtra("from_wake_word", true)
+        }
+
+        // Try direct startActivity first (works on many devices)
+        try {
+            context.startActivity(contentIntent)
+            android.util.Log.d("LockScreenWaker", "Direct startActivity succeeded")
+        } catch (e: Exception) {
+            android.util.Log.w("LockScreenWaker", "Direct startActivity failed, using full-screen intent: ${e.message}")
+        }
+
+        // Also fire full-screen notification as backup (ensures it shows over lock screen)
+        val pendingIntent = PendingIntent.getActivity(
+            context, 1, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val notification = Notification.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_btn_speak_now)
+            .setContentTitle("Jarvis")
+            .setContentText("Executing: $pendingCommand")
+            .setPriority(Notification.PRIORITY_HIGH)
+            .setCategory(Notification.CATEGORY_CALL)
+            .setFullScreenIntent(pendingIntent, true)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+        val manager = context.getSystemService(NotificationManager::class.java)
+        manager.notify(NOTIFICATION_ID + 1, notification)
     }
 
     private fun ensureChannel(context: Context) {

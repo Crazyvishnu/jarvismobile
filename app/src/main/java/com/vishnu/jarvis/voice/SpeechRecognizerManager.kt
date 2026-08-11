@@ -12,6 +12,8 @@ class SpeechRecognizerManager(
     private val callback: (String) -> Unit
 ) {
 
+    var errorCallback: ((Int) -> Unit)? = null
+
     private val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
 
     init {
@@ -39,7 +41,9 @@ class SpeechRecognizerManager(
 
             override fun onEndOfSpeech() {}
 
-            override fun onError(error: Int) {}
+            override fun onError(error: Int) {
+                errorCallback?.invoke(error)
+            }
 
             override fun onPartialResults(partialResults: Bundle?) {}
 
@@ -61,7 +65,11 @@ class SpeechRecognizerManager(
             "en-US"
         )
 
-        recognizer.startListening(intent)
+        try {
+            recognizer.startListening(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun stop() {
