@@ -32,3 +32,5 @@ Jarvis processes the wake word **100% locally** on your device. Microphone data 
 
 ---
 *Developed with the goal of creating the ultimate Android voice assistant.*
+"# jarvis" 
+"# jarvis" 
